@@ -49,7 +49,9 @@ app.delete ('/bloggers/:id', (req: Request, res:Response) => {
 
 //Добавить Блоггера
 app.post('/bloggers', (req: Request, res: Response) => {
-    if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100)
+    if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100 ||
+        req.body.youtubeUrl === RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test)
+
 
     {
         return  res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1})
@@ -66,11 +68,13 @@ app.post('/bloggers', (req: Request, res: Response) => {
 //Обновить блоггера
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     if (typeof req.body.name !== "string" || req.body.name?.trim() === "" || req.body.name.length >= 15 ||
-        typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
+        typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100 ||
+        req.body.youtubeUrl === RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test
 )
     {
         return  res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1})
     }
+
     let blogger = bloggers.find(p => p.id === +req.params.id)
     if (blogger) {
         blogger.name = req.body.name
@@ -122,8 +126,8 @@ app.post('/posts', (req: Request, res: Response) => {
        } else {res.send(400)
       }
 
-   let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId).name
-
+   let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
+    if (bloggerPostName) {
     const newPost = {
         id: +(new Date()),
         title: req.body.title,
@@ -134,9 +138,11 @@ app.post('/posts', (req: Request, res: Response) => {
     }
     posts.push(newPost)
     res.status(201).send(newPost)
+    } else {
+        res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1}) }
 })
 
-//Обновить
+//Обновить пост
 app.put('/posts/:id', (req: Request, res: Response) => {
     if (typeof req.body.title !== "string" || req.body.title?.trim() === "" || req.body.title.length >= 30 ||
         typeof req.body.shortDescription !== "string" || req.body.shortDescription?.trim() === "" || req.body.shortDescription.length >= 100 ||
@@ -146,19 +152,18 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     }
 
     if (bloggers.find(b => b.id === req.body.bloggerId)) {
-    } else {res.send(400)
+    } else {res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1})
     }
 
-    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId).name
+    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
 
     let post = posts.find(p => p.id === +req.params.id)
-    if (post) {
+    if (post && bloggerPostName) {
         post.title = req.body.title
         post.shortDescription = req.body.shortDescription
         post.content = req.body.content
         post.bloggerId = +req.body.bloggerId
         post.bloggerName = bloggerPostName
-
         res.status(204).send(post)
     } else {
         res.send(404)
