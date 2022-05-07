@@ -50,12 +50,11 @@ app.delete ('/bloggers/:id', (req: Request, res:Response) => {
 //Добавить Блоггера
 app.post('/bloggers', (req: Request, res: Response) => {
     if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100 ||
-        req.body.youtubeUrl === RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test)
-
-
+        RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test(req.body.youtubeUrl))
     {
         return  res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1})
     }
+
     const newBlogger = {
         id: +(new Date()),
         name: req.body.name,
@@ -69,7 +68,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
 app.put('/bloggers/:id',(req: Request, res: Response)=>{
     if (typeof req.body.name !== "string" || req.body.name?.trim() === "" || req.body.name.length >= 15 ||
         typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100 ||
-        req.body.youtubeUrl === RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test
+        RegExp (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).test(req.body.youtubeUrl)
 )
     {
         return  res.status(400).send({errorsMessages: [{ message: 'string', field: "title" }], resultCode: 1})
