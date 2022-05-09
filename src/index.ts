@@ -4,14 +4,15 @@ import bodyParser from "body-parser";
 const app = express()
 const port = process.env.PORT || 3000
 
-const bloggers = [{id: 1, name: 'Pasha', youtubeUrl: 'https://youtube.com/pasha-first'},
+const bloggers: Array<{ id: number, name: string, youtubeUrl: string}> = [/*{id: 1, name: 'Pasha', youtubeUrl: 'https://youtube.com/pasha-first'},
     {id: 2, name: 'Sasha', youtubeUrl: 'https://youtube.com/sasha-second'},
     {id: 3, name: 'Dasha', youtubeUrl: 'https://youtube.com/dasha-third'},
     {id: 4, name: 'Masha', youtubeUrl: 'https://youtube.com/masha-fourth'},
-    {id: 5, name: 'Kolya', youtubeUrl: 'https://youtube.com/kolya-fifth'}]
+    {id: 5, name: 'Kolya', youtubeUrl: 'https://youtube.com/kolya-fifth'}*/]
 
-const posts =
-    [{
+const posts: Array<{ id: number, title: string, shortDescription: string,
+ content: string, bloggerId: number, bloggerName: string }> =
+    [/*{
         id: 1,
         title: 'post1',
         shortDescription: 'Обо мне',
@@ -51,7 +52,7 @@ const posts =
             bloggerId: 5,
             bloggerName: 'Kolya'
         },
-    ]
+   */ ]
 
 app.use(bodyParser())
 
@@ -85,9 +86,8 @@ app.delete('/bloggers/:id', (req: Request, res: Response) => {
 //Добавить Блоггера
 app.post('/bloggers', (req: Request, res: Response) => {
     if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
-       // || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
-        )
-        {
+        || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
+    ) {
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }
 
@@ -104,7 +104,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     if (typeof req.body.name !== "string" || req.body.name?.trim() === "" || req.body.name.length >= 15 ||
         typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
-       // || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
+        || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
     ) {
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }
