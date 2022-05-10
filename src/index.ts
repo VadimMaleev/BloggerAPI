@@ -86,10 +86,12 @@ app.delete('/bloggers/:id', (req: Request, res: Response) => {
 //Добавить Блоггера
 app.post('/bloggers', (req: Request, res: Response) => {
 
+    const errors = [];
+    const regex = new RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/)
    const blogger = {...req.body};
    const ArrayBlogger = Object.keys(blogger).filter(el => el === 'name' || el === 'youtubeUrl')
 
-   if (Object.keys(blogger).length < 2) {
+  /* if (Object.keys(blogger).length < 2) {
        res.status(400).send({
                errorsMessages: [
                    {
@@ -100,9 +102,9 @@ app.post('/bloggers', (req: Request, res: Response) => {
                resultCode: 1,
            },
        )
-   }
+   }*/
 
-   if (ArrayBlogger.length <2) {
+   /*if (ArrayBlogger.length < 2) {
        res.status(400).send({
                errorsMessages: [
                    {
@@ -113,9 +115,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
                resultCode: 1,
            },
        )
-   }
-
-   if (Object.keys(blogger))
+   }*/
 
     /*for(let prop in blogger) {
         if (!prop) {
@@ -132,12 +132,34 @@ app.post('/bloggers', (req: Request, res: Response) => {
         }
     }*/
 
+       if (!regex.test(blogger.youtubeUrl)) {
+           errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
+       }
 
-    if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
+       if (ArrayBlogger.length < 2) {
+           if (ArrayBlogger[0] === 'youtubeUrl') {
+               errors.push({message: 'field name is required', field: 'name'})
+           } else {
+               errors.push({message: 'field is required', field: 'youtubeUrl'})
+           }
+       }
+
+   /* if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
         || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
     ) {
         debugger
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
+    }*/
+
+    if (errors.length) {
+        res.status(400).send((
+            {
+                errorsMessages: [
+                    ...errors
+                ],
+                resultCode: 1
+            }
+            ))
     }
 
     const newBlogger = {
