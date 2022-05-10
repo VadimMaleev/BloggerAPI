@@ -85,9 +85,42 @@ app.delete('/bloggers/:id', (req: Request, res: Response) => {
 
 //Добавить Блоггера
 app.post('/bloggers', (req: Request, res: Response) => {
+
+   const blogger = {...req.body};
+
+   if (Object.keys(blogger).length < 2) {
+       res.status(400).send({
+               errorsMessages: [
+                   {
+                       message: 'field is requred',
+                       field: 'no field'
+                   }
+               ],
+               resultCode: 1,
+           },
+       )
+   }
+
+    /*for(let prop in blogger) {
+        if (!prop) {
+            res.status(400).send({
+                errorsMessages: [
+                    {
+                        message: 'field is requred',
+                        field: `${prop}`
+                    }
+                ],
+                    resultCode: 1,
+            },
+                )
+        }
+    }*/
+
+
     if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
         || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
     ) {
+        debugger
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }
 
@@ -161,14 +194,14 @@ app.post('/posts', (req: Request, res: Response) => {
         res.send(400)
     }
 
-    let bloggerPostName = bloggers.find(b => b.id === req.body.bloggerId)?.name
+    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
     if (bloggerPostName) {
         const newPost = {
             id: +(new Date()),
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content,
-            bloggerId: req.body.bloggerId,
+            bloggerId: +req.body.bloggerId,
             bloggerName: bloggerPostName
         }
         posts.push(newPost)
@@ -192,14 +225,14 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }
 
-    let bloggerPostName = bloggers.find(b => b.id === req.body.bloggerId)?.name
+    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
 
     let post = posts.find(p => p.id === +req.params.id)
     if (post && bloggerPostName) {
         post.title = req.body.title
         post.shortDescription = req.body.shortDescription
         post.content = req.body.content
-        post.bloggerId = req.body.bloggerId
+        post.bloggerId = +req.body.bloggerId
         post.bloggerName = bloggerPostName
         res.status(204).send(post)
     } else {
