@@ -161,7 +161,7 @@ app.post('/posts', (req: Request, res: Response) => {
         res.send(400)
     }
 
-    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
+    let bloggerPostName = bloggers.find(b => b.id === req.body.bloggerId)?.name
     if (bloggerPostName) {
         const newPost = {
             id: +(new Date()),
@@ -192,7 +192,7 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }
 
-    let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
+    let bloggerPostName = bloggers.find(b => b.id === req.body.bloggerId)?.name
 
     let post = posts.find(p => p.id === +req.params.id)
     if (post && bloggerPostName) {
