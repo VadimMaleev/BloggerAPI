@@ -87,6 +87,7 @@ app.delete('/bloggers/:id', (req: Request, res: Response) => {
 app.post('/bloggers', (req: Request, res: Response) => {
 
    const blogger = {...req.body};
+   const ArrayBlogger = Object.keys(blogger).filter(el => el === 'name' || el === 'youtubeUrl')
 
    if (Object.keys(blogger).length < 2) {
        res.status(400).send({
@@ -100,6 +101,21 @@ app.post('/bloggers', (req: Request, res: Response) => {
            },
        )
    }
+
+   if (ArrayBlogger.length <2) {
+       res.status(400).send({
+               errorsMessages: [
+                   {
+                       message: 'field is requred',
+                       field: 'no field'
+                   }
+               ],
+               resultCode: 1,
+           },
+       )
+   }
+
+   if (Object.keys(blogger))
 
     /*for(let prop in blogger) {
         if (!prop) {
