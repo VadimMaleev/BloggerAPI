@@ -239,7 +239,15 @@ app.post('/posts', (req: Request, res: Response) => {
     }
     if (req.body.youtubeUrl && (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100)) {
         errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    }
+
+
+
+    if (bloggers.find(b => b.id === req.body.bloggerId)) {
+    } else {
+        res.send(400)
     }*/
+
 
     if (errors.length) {
         res.status(400).send((
@@ -252,10 +260,7 @@ app.post('/posts', (req: Request, res: Response) => {
         ))
     }
 
-    if (bloggers.find(b => b.id === req.body.bloggerId)) {
-    } else {
-        res.send(400)
-    }
+
 
     let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
     if (bloggerPostName) {
