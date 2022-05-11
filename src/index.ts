@@ -151,6 +151,17 @@ app.post('/bloggers', (req: Request, res: Response) => {
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }*/
 
+    if (req.body.name?.trim() === "") {
+        errors.push({message: 'invalid name', field: 'name'})
+    } else if (req.body.name.length >= 15) {
+        errors.push({message: 'invalid name', field: 'name'})
+    }
+
+    if (req.body.youtubeUrl?.trim() === "") {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    } else if (req.body.name.length >= 15) {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    }
 
 
     if (errors.length) {
@@ -164,17 +175,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
             ))
     }
 
-    if (req.body.name?.trim() === "") {
-        errors.push({message: 'invalid name', field: 'name'})
-    } else if (req.body.name.length >= 15) {
-        errors.push({message: 'invalid name', field: 'name'})
-    }
 
-    if (req.body.youtubeUrl?.trim() === "") {
-        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
-    } else if (req.body.name.length >= 15) {
-        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
-    }
 
 
     const newBlogger = {
