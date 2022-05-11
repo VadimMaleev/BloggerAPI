@@ -244,12 +244,9 @@ app.post('/posts', (req: Request, res: Response) => {
         errors.push({message: 'invalid content', field: 'content'})
     }
 
-
-
-
     if (bloggers.find(b => b.id === req.body.bloggerId)) {
     } else {
-        res.send(400)
+        errors.push({message: 'invalid bloggerId', field: 'bloggerId'})
     }
 
 
