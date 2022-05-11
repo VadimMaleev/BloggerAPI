@@ -164,13 +164,18 @@ app.post('/bloggers', (req: Request, res: Response) => {
             ))
     }
 
-    if (req.body.name.trim() === "" || req.body.name.length >= 15) {
-        return res.status(400).send({ errorsMessages: [{ message: "name is too long", field: "name" }], resultCode: 1 })
+    if (req.body.name?.trim() === "") {
+        errors.push({message: 'invalid name', field: 'name'})
+    } else if (req.body.name.length >= 15) {
+        errors.push({message: 'invalid name', field: 'name'})
     }
 
-    if (req.body.youtubeUrl.trim() === "" || req.body.youtubeUrl.length >= 100) {
-        return res.status(400).send({ errorsMessages: [{ message: "Url is too long", field: "youtubeUrl" }], resultCode: 1 })
+    if (req.body.youtubeUrl?.trim() === "") {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    } else if (req.body.name.length >= 15) {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
     }
+
 
     const newBlogger = {
         id: +(new Date()),
