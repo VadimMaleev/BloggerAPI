@@ -151,6 +151,14 @@ app.post('/bloggers', (req: Request, res: Response) => {
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }*/
 
+    if (req.body.name?.trim() === "" || req.body.name.length >= 15) {
+        errors.push({message: 'name is too long', field: 'name'})
+    }
+
+    if (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100) {
+        errors.push({message: 'URL is too long', field: 'youtubeUrl'})
+    }
+
     if (errors.length) {
         res.status(400).send((
             {
