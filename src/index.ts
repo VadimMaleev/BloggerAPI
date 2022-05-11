@@ -282,16 +282,52 @@ app.post('/posts', (req: Request, res: Response) => {
 
 //Обновить пост
 app.put('/posts/:id', (req: Request, res: Response) => {
-    if (typeof req.body.title !== "string" || req.body.title?.trim() === "" || req.body.title.length >= 30 ||
-        typeof req.body.shortDescription !== "string" || req.body.shortDescription?.trim() === "" || req.body.shortDescription.length >= 100 ||
-        typeof req.body.content !== "string" || req.body.content?.trim() === "" || req.body.content.length >= 1000
-    ) {
-        return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
+    const errors = [];
+    const postVal = {...req.body};
+    const arrayPosts = Object.keys(postVal).filter(el => el === 'title' || el === 'shortDescription'
+        || el === 'content' || el === 'bloggerId' )
+
+    if (!arrayPosts.includes('title')) {
+        errors.push({message: 'field is required', field: 'title'})
+    }
+
+    if (!arrayPosts.includes('shortDescription')) {
+        errors.push({message: 'field is required', field: 'shortDescription'})
+    }
+
+    if (!arrayPosts.includes('content')) {
+        errors.push({message: 'field is required', field: 'content'})
+    }
+
+    if (!arrayPosts.includes('bloggerId')) {
+        errors.push({message: 'field is required', field: 'bloggerId'})
+    }
+
+    if (req.body.title && (req.body.title.trim() === "" || req.body.title.length >= 30)) {
+        errors.push({message: 'invalid title', field: 'title'})
+    }
+    if (req.body.shortDescription && (req.body.shortDescription?.trim() === "" || req.body.shortDescription?.length >= 100)) {
+        errors.push({message: 'invalid shortDescription', field: 'shortDescription'})
+    }
+    if (req.body.content && (req.body.content.trim() === "" || req.body.content.length >= 1000)) {
+        errors.push({message: 'invalid content', field: 'content'})
     }
 
     if (bloggers.find(b => b.id === req.body.bloggerId)) {
     } else {
-        res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
+        errors.push({message: 'invalid bloggerId', field: 'bloggerId'})
+    }
+
+
+    if (errors.length) {
+        res.status(400).send((
+            {
+                errorsMessages: [
+                    ...errors
+                ],
+                resultCode: 1
+            }
+        ))
     }
 
     let bloggerPostName = bloggers.find(b => b.id === +req.body.bloggerId)?.name
