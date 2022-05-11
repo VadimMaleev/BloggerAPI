@@ -132,9 +132,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
         }
     }*/
 
-       if (!regex.test(blogger.youtubeUrl)) {
-           errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
-       }
+
 
        if (ArrayBlogger.length < 2) {
            if (ArrayBlogger[0] === 'youtubeUrl') {
@@ -150,6 +148,10 @@ app.post('/bloggers', (req: Request, res: Response) => {
 
            if (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100) {
                errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+           }
+
+           if (!regex.test(blogger.youtubeUrl)) {
+               errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
            }
        }
 
