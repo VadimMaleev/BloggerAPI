@@ -91,47 +91,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
    const blogger = {...req.body};
    const ArrayBlogger = Object.keys(blogger).filter(el => el === 'name' || el === 'youtubeUrl')
 
-  /* if (Object.keys(blogger).length < 2) {
-       res.status(400).send({
-               errorsMessages: [
-                   {
-                       message: 'field is requred',
-                       field: 'no field'
-                   }
-               ],
-               resultCode: 1,
-           },
-       )
-   }*/
-
-   /*if (ArrayBlogger.length < 2) {
-       res.status(400).send({
-               errorsMessages: [
-                   {
-                       message: 'field is requred',
-                       field: 'no field'
-                   }
-               ],
-               resultCode: 1,
-           },
-       )
-   }*/
-
-    /*for(let prop in blogger) {
-        if (!prop) {
-            res.status(400).send({
-                errorsMessages: [
-                    {
-                        message: 'field is requred',
-                        field: `${prop}`
-                    }
-                ],
-                    resultCode: 1,
-            },
-                )
-        }
-    }*/
-
        if (!regex.test(blogger.youtubeUrl)) {
            errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
        }
@@ -143,12 +102,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
                errors.push({message: 'field is required', field: 'youtubeUrl'})
            }
        }
-
-   /* if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
-        || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
-    ) {
-        return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
-    }*/
 
     if (req.body.name && (req.body.name.trim() === "" || req.body.name.length >= 15)) {
         errors.push({message: 'invalid name', field: 'name'})
@@ -185,11 +138,43 @@ app.post('/bloggers', (req: Request, res: Response) => {
 
 //Обновить блоггера
 app.put('/bloggers/:id', (req: Request, res: Response) => {
-    if (typeof req.body.name !== "string" || req.body.name?.trim() === "" || req.body.name.length >= 15 ||
-        typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
-        || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
-    ) {
-        return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
+    const errors = [];
+    const regex = new RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/)
+    const bloggerVal = {...req.body};
+    const ArrayBlogger = Object.keys(bloggerVal).filter(el => el === 'name' || el === 'youtubeUrl')
+
+    if (!regex.test(bloggerVal.youtubeUrl)) {
+        errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
+    }
+
+    if (ArrayBlogger.length < 2) {
+        if (ArrayBlogger[0] === 'youtubeUrl') {
+            errors.push({message: 'field name is required', field: 'name'})
+        } else {
+            errors.push({message: 'field is required', field: 'youtubeUrl'})
+        }
+    }
+
+    if (req.body.name && (req.body.name.trim() === "" || req.body.name.length >= 15)) {
+        errors.push({message: 'invalid name', field: 'name'})
+    }
+
+
+    if (req.body.youtubeUrl && (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100)) {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    }
+
+
+
+    if (errors.length) {
+        res.status(400).send((
+            {
+                errorsMessages: [
+                    ...errors
+                ],
+                resultCode: 1
+            }
+        ))
     }
 
     let blogger = bloggers.find(p => p.id === +req.params.id)
