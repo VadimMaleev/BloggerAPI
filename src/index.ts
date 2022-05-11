@@ -147,7 +147,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
    /* if (req.body.name?.trim() === "" || req.body.name.length >= 15 || req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100
         || !RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).test(req.body.youtubeUrl)
     ) {
-        debugger
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }*/
 
@@ -175,8 +174,8 @@ app.post('/bloggers', (req: Request, res: Response) => {
                 resultCode: 1
             }
             ))
+        return
     }
-
 
 
 
