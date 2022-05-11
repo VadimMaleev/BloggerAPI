@@ -234,19 +234,23 @@ app.post('/posts', (req: Request, res: Response) => {
         errors.push({message: 'field is required', field: 'bloggerId'})
     }
 
-    /*if (req.body.name && (req.body.name.trim() === "" || req.body.name.length >= 15)) {
-        errors.push({message: 'invalid name', field: 'name'})
+    if (req.body.title && (req.body.title.trim() === "" || req.body.title.length >= 30)) {
+        errors.push({message: 'invalid title', field: 'title'})
     }
-    if (req.body.youtubeUrl && (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100)) {
-        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    if (req.body.shortDescription && (req.body.shortDescription?.trim() === "" || req.body.shortDescription?.length >= 100)) {
+        errors.push({message: 'invalid shortDescription', field: 'shortDescription'})
     }
+    if (req.body.content && (req.body.content.trim() === "" || req.body.content.length >= 1000)) {
+        errors.push({message: 'invalid content', field: 'content'})
+    }
+
 
 
 
     if (bloggers.find(b => b.id === req.body.bloggerId)) {
     } else {
         res.send(400)
-    }*/
+    }
 
 
     if (errors.length) {
