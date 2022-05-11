@@ -132,26 +132,15 @@ app.post('/bloggers', (req: Request, res: Response) => {
         }
     }*/
 
-
+       if (!regex.test(blogger.youtubeUrl)) {
+           errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
+       }
 
        if (ArrayBlogger.length < 2) {
            if (ArrayBlogger[0] === 'youtubeUrl') {
                errors.push({message: 'field name is required', field: 'name'})
            } else {
                errors.push({message: 'field is required', field: 'youtubeUrl'})
-           }
-       } else {
-           if (req.body.name.trim() === "" || req.body.name.length >= 15) {
-               errors.push({message: 'invalid name', field: 'name'})
-           }
-
-
-           if (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100) {
-               errors.push({message: 'invalid Url', field: 'youtubeUrl'})
-           }
-
-           if (!regex.test(blogger.youtubeUrl)) {
-               errors.push({ message: 'Invalid URL', field: "youtubeUrl" })
            }
        }
 
@@ -161,7 +150,14 @@ app.post('/bloggers', (req: Request, res: Response) => {
         return res.status(400).send({errorsMessages: [{message: 'string', field: "title"}], resultCode: 1})
     }*/
 
+    if (req.body.name && (req.body.name.trim() === "" || req.body.name.length >= 15)) {
+        errors.push({message: 'invalid name', field: 'name'})
+    }
 
+
+    if (req.body.youtubeUrl && (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl?.length >= 100)) {
+        errors.push({message: 'invalid Url', field: 'youtubeUrl'})
+    }
 
 
 
