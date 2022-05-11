@@ -164,12 +164,12 @@ app.post('/bloggers', (req: Request, res: Response) => {
             ))
     }
 
-    if (req.body.name?.trim() === "" || req.body.name.length >= 15) {
-        return res.status(400).send({ errorsMessages: [{ message: "name is too ling", field: "name" }], resultCode: 1 })
+    if (req.body.name.trim() === "" || req.body.name.length >= 15) {
+        return res.status(400).send({ errorsMessages: [{ message: "name is too long", field: "name" }], resultCode: 1 })
     }
 
-    if (req.body.youtubeUrl?.trim() === "" || req.body.youtubeUrl.length >= 100) {
-        return res.status(400).send({ errorsMessages: [{ message: "Url is too ling", field: "youtubeUrl" }], resultCode: 1 })
+    if (req.body.youtubeUrl.trim() === "" || req.body.youtubeUrl.length >= 100) {
+        return res.status(400).send({ errorsMessages: [{ message: "Url is too long", field: "youtubeUrl" }], resultCode: 1 })
     }
 
     const newBlogger = {
