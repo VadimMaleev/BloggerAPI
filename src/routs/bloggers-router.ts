@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const bloggersRouter = Router({})
 
@@ -21,7 +22,7 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 //Удалить блоггера
-bloggersRouter.delete('/:id', (req: Request, res: Response) => {
+bloggersRouter.delete('/:id', authMiddleware, (req: Request, res: Response) => {
     const isDeleted = bloggersRepository.deleteBlogger(+req.params.id)
     if (isDeleted) {
         res.send(204)
@@ -31,7 +32,7 @@ bloggersRouter.delete('/:id', (req: Request, res: Response) => {
 })
 
 //Добавить Блоггера
-bloggersRouter.post('/', (req: Request, res: Response) => {
+bloggersRouter.post('/', authMiddleware, (req: Request, res: Response) => {
 
     const errors = [];
     const regex = new RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/)
@@ -75,7 +76,7 @@ bloggersRouter.post('/', (req: Request, res: Response) => {
 })
 
 //Обновить блоггера
-bloggersRouter.put('/:id', (req: Request, res: Response) => {
+bloggersRouter.put('/:id', authMiddleware, (req: Request, res: Response) => {
     const errors = [];
     const regex = new RegExp(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/)
     const bloggerVal = {...req.body};

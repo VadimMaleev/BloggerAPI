@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {bloggers} from "../repositories/bloggers-repository";
 import {postsRepository} from "../repositories/posts-repository";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const postsRouter = Router({})
 
@@ -23,7 +24,7 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 //Удалить пост
-postsRouter.delete('/:id', (req: Request, res: Response) => {
+postsRouter.delete('/:id', authMiddleware, (req: Request, res: Response) => {
     const isDeleted = postsRepository.deletePost(+req.params.id)
     if (isDeleted) {
         res.send(204)
@@ -33,7 +34,7 @@ postsRouter.delete('/:id', (req: Request, res: Response) => {
 })
 
 //Добавить пост
-postsRouter.post('/', (req: Request, res: Response) => {
+postsRouter.post('/', authMiddleware, (req: Request, res: Response) => {
     const errors = [];
     const postVal = {...req.body};
     const arrayPosts = Object.keys(postVal).filter(el => el === 'title' || el === 'shortDescription'
@@ -88,7 +89,7 @@ postsRouter.post('/', (req: Request, res: Response) => {
 })
 
 //Обновить пост
-postsRouter.put('/:id', (req: Request, res: Response) => {
+postsRouter.put('/:id', authMiddleware, (req: Request, res: Response) => {
     const errors = [];
     const postVal = {...req.body};
     const arrayPosts = Object.keys(postVal).filter(el => el === 'title' || el === 'shortDescription'
